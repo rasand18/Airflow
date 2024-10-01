@@ -1,0 +1,10 @@
+kubectl apply -f dashboard-adminuser.yaml
+kubectl apply -f dashboard-clusterrole.yaml
+kubectl apply -f dashboard-secret.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d
+helm install airflow apache-airflow/airflow --namespace airflow --create-namespace --debug
+kubectl port-forward svc/airflow-webserver 8080:8080 -n airflow
+helm show values apache-airflow/airflow > values.yaml
+echo "Fernet Key: $(kubectl get secret airflow-fernet-key --namespace airflow -o jsonpath="{.data.fernet-key}" | base64 --decode)"
+helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace -f values.yaml

@@ -17,6 +17,7 @@ dag = DAG(
 t1 = BashOperator(
     task_id = 'hello_world',
     bash_command='echo "Hello World"',
+    queue='kubernetes',
     dag = dag
 )
 

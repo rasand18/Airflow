@@ -17,7 +17,7 @@ dag = DAG(
 # Kontrollera om katalogen finns
 t1 = BashOperator(
     task_id='check_directory_exists',
-    bash_command='[ -f /opt/airflow/dags/repo/values.yaml ] && cat /opt/airflow/dags/repo/dags/values.yaml || echo "File does not exist"',
+    bash_command='[ -f /opt/airflow/dags/repo/values.yaml ] && cat /opt/airflow/dags/repo/values.yaml || echo "File does not exist"',
     dag=dag
 )
 

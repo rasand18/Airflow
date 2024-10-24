@@ -18,7 +18,6 @@ dag = DAG(
 t1 = BashOperator(
     task_id='check_directory_exists',
     bash_command='[ -d /opt/airflow/dags/repo/dags ] && echo "Directory exists" || echo "Directory does not exist"',
-    queue='kubernetes',
     dag=dag
 )
 

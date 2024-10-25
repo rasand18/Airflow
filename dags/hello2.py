@@ -1,6 +1,5 @@
 from datetime import timedelta 
-from datetime import datetime
-from pathlib import Path
+from datetime import datetime 
 import os
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
@@ -16,7 +15,8 @@ default_args = {
 dag = DAG(
     'check_directory',
     default_args=default_args,
-    schedule=timedelta(days=1)
+    schedule=timedelta(days=1),
+    template_searchpath='/opt/airflow/dags/repo/'
 )
 
 # Kontrollera om katalogen finns
@@ -25,7 +25,7 @@ spark_k8s_task = SparkKubernetesOperator(
     trigger_rule="all_success",
     depends_on_past=False,
     retries=0,
-    application_file=str(Path("/opt/airflow/dags/repo/spark-pi.yaml")),
+    application_file='spark-pi.yaml',
     namespace="spark-operator",
     kubernetes_conn_id="spark-k8s",
     do_xcom_push=True,

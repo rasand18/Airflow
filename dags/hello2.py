@@ -15,9 +15,39 @@ default_args = {
 dag = DAG(
     'check_directory',
     default_args=default_args,
-    schedule=timedelta(days=1),
-    template_searchpath='/opt/airflow/dags/repo/'
+    schedule=timedelta(days=1)
 )
+
+
+spark_application_yaml = """
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: spark-pi
+  namespace: spark-operator
+spec:
+  type: Scala
+  mode: cluster
+  image: spark:3.5.3
+  imagePullPolicy: IfNotPresent
+  mainClass: org.apache.spark.examples.SparkPi
+  mainApplicationFile: local:///opt/spark/examples/jars/spark-examples.jar
+  arguments:
+  - "5000"
+  sparkVersion: 3.5.3
+  driver:
+    labels:
+      version: 3.5.3
+    cores: 1
+    memory: 512m
+    serviceAccount: spark-operator-spark
+  executor:
+    labels:
+      version: 3.5.3
+    instances: 1
+    cores: 1
+    memory: 512m
+"""
 
 # Kontrollera om katalogen finns
 spark_k8s_task = SparkKubernetesOperator(
@@ -25,7 +55,7 @@ spark_k8s_task = SparkKubernetesOperator(
     trigger_rule="all_success",
     depends_on_past=False,
     retries=0,
-    application_file='spark-pi.yaml',
+    application_file=spark_application_yaml,
     namespace="spark-operator",
     kubernetes_conn_id="spark-k8s",
     do_xcom_push=True,

@@ -4,8 +4,6 @@ from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKu
 from airflow.operators.python_operator import PythonOperator
 from airflow.hooks.base_hook import BaseHook
 import boto3
-import csv
-from io import BytesIO
 
 default_args = {
     'owner': 'datamasterylab.com',
@@ -13,8 +11,8 @@ default_args = {
     'catchup': False
 }
 
-# Funktion för att skapa och ladda upp CSV direkt till MinIO
-def create_and_upload_to_minio(bucket_name, object_name):
+# Funktion för att testa MinIO-anslutning
+def test_minio_connection():
     # Hämta anslutningsdetaljer från Airflow
     conn = BaseHook.get_connection("minio_conn")
     
@@ -24,31 +22,23 @@ def create_and_upload_to_minio(bucket_name, object_name):
     secret_key = extra_config.get("aws_secret_access_key")
     endpoint_url = extra_config.get("endpoint_url")
 
+    print(access_key)
+    print(secret_key)
+    print(endpoint_url)
     # Skapa S3-klient för MinIO
     s3_client = boto3.client(
-        'aws',
+        's3',
         endpoint_url=endpoint_url,
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_key
     )
 
-    # Skapa CSV-innehållet direkt i minnet
-    csv_buffer = BytesIO()
-    writer = csv.writer(csv_buffer)
-    writer.writerow(["Name", "Age", "City"])
-    writer.writerow(["Alice", 30, "New York"])
-    writer.writerow(["Bob", 25, "Los Angeles"])
-    writer.writerow(["Charlie", 35, "Chicago"])
-    
-    # Flytta pekaren till början av buffer för att ladda upp korrekt
-    csv_buffer.seek(0)
-    
-    # Ladda upp filen till MinIO
+    # Försök att lista buckets som ett anslutningstest
     try:
-        s3_client.upload_fileobj(csv_buffer, bucket_name, object_name)
-        print(f"File successfully uploaded to {bucket_name}/{object_name}")
+        response = s3_client.list_buckets()
+        print("Connection to MinIO successful. Buckets:", [bucket["Name"] for bucket in response.get("Buckets", [])])
     except Exception as e:
-        print(f"Error occurred: {e}")
+        print(f"Connection test failed: {e}")
 
 dag = DAG(
     'hej',
@@ -57,18 +47,14 @@ dag = DAG(
     template_searchpath='/opt/airflow/dags/repo/dags/'
 )
 
-# Task för att skapa och ladda upp CSV till MinIO
-minio_upload_task = PythonOperator(
-    task_id='create_and_upload_to_minio',
-    python_callable=create_and_upload_to_minio,
-    op_kwargs={
-        'bucket_name': 'my-bucket',          # Ange din bucket-namn
-        'object_name': 'uploaded_example_data.csv'  # Namn på filen i bucketen
-    },
+# Task för att testa anslutningen till MinIO
+minio_connection_test_task = PythonOperator(
+    task_id='test_minio_connection',
+    python_callable=test_minio_connection,
     dag=dag
 )
 
-# Kontrollera om katalogen finns
+# Spark task
 spark_k8s_task = SparkKubernetesOperator(
     task_id='n-spark-on-k8s-airflow',
     trigger_rule="all_success",
@@ -82,4 +68,4 @@ spark_k8s_task = SparkKubernetesOperator(
 )
 
 # Definiera task-beroende
-spark_k8s_task >> minio_upload_task
+spark_k8s_task >> minio_connection_test_task

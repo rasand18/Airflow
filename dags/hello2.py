@@ -15,8 +15,7 @@ default_args = {
 dag = DAG(
     'check_directory',
     default_args=default_args,
-    schedule=timedelta(days=1),
-    template_searchpath='/opt/airflow/dags/repo/dags/spark8s/'
+    schedule=timedelta(days=1)
 )
 
 # Kontrollera om katalogen finns

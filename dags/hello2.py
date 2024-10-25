@@ -26,7 +26,7 @@ def create_and_upload_to_minio(bucket_name, object_name):
 
     # Skapa S3-klient för MinIO
     s3_client = boto3.client(
-        's3',
+        'aws',
         endpoint_url=endpoint_url,
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_key

@@ -1,6 +1,9 @@
+from datetime import timedelta
+import os
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from datetime import datetime, timedelta
+from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
+from airflow.utils.dates import days_ago
+from airflow.models import Variable
 
 default_args = {
     'owner': 'datamasterylab.com',
@@ -15,10 +18,16 @@ dag = DAG(
 )
 
 # Kontrollera om katalogen finns
-t1 = BashOperator(
-    task_id='check_directory_exists',
-    bash_command='[ -f /opt/airflow/dags/repo/values.yaml ] && cat /opt/airflow/dags/repo/values.yaml || echo "File does not exist"',
+spark_k8s_task = SparkKubernetesOperator(
+    task_id='n-spark-on-k8s-airflow',
+    trigger_rule="all_success",
+    depends_on_past=False,
+    retries=0,
+    application_file='/opt/airflow/dags/repo/spark-pi.yaml',
+    namespace="spark-operator",
+    kubernetes_conn_id="spark-k8s",
+    do_xcom_push=True,
     dag=dag
 )
 
-t1
+spark_k8s_task

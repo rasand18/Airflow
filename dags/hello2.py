@@ -9,7 +9,7 @@ from io import BytesIO
 
 default_args = {
     'owner': 'datamasterylab.com',
-    'start_date': datetime(2024, 10, 20),
+    'start_date': datetime(2024, 10, 25),
     'catchup': False
 }
 

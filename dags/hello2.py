@@ -16,7 +16,7 @@ dag = DAG(
     'check_directory',
     default_args=default_args,
     schedule=timedelta(days=1),
-    template_searchpath='/opt/airflow/dags/repo/dags/spark8s/'
+    template_searchpath='/opt/airflow/dags/repo/dags/'
 )
 
 # Kontrollera om katalogen finns
@@ -25,7 +25,7 @@ spark_k8s_task = SparkKubernetesOperator(
     trigger_rule="all_success",
     depends_on_past=False,
     retries=0,
-    application_file='/opt/airflow/dags/repo/dags/spark8s/spark-pi.yaml',
+    application_file='spark-pi.yaml',
     namespace="spark-operator",
     kubernetes_conn_id="spark-k8s",
     do_xcom_push=True,

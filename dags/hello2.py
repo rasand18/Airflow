@@ -1,5 +1,6 @@
 from datetime import timedelta 
-from datetime import datetime 
+from datetime import datetime
+from pathlib import Path
 import os
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
@@ -24,7 +25,7 @@ spark_k8s_task = SparkKubernetesOperator(
     trigger_rule="all_success",
     depends_on_past=False,
     retries=0,
-    application_file='/opt/airflow/dags/repo/spark-pi.yaml',
+    application_file=str(Path("/opt/airflow/dags/repo/spark-pi.yaml")),
     namespace="spark-operator",
     kubernetes_conn_id="spark-k8s",
     do_xcom_push=True,

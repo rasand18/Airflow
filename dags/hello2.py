@@ -47,6 +47,7 @@ spec:
     instances: 1
     cores: 1
     memory: 512m
+    
 """
 
 # Kontrollera om katalogen finns

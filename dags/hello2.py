@@ -13,7 +13,7 @@ default_args = {
 }
 
 dag = DAG(
-    'check_directory',
+    'hej',
     default_args=default_args,
     schedule=timedelta(days=1),
     template_searchpath='/opt/airflow/dags/repo/dags/'

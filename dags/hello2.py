@@ -64,8 +64,9 @@ spark_k8s_task = SparkKubernetesOperator(
     namespace="spark-operator",
     kubernetes_conn_id="spark-k8s",
     do_xcom_push=True,
+    get_logs=True,
     dag=dag
 )
 
 # Definiera task-beroende
-spark_k8s_task >> minio_connection_test_task
+spark_k8s_task

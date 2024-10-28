@@ -11,8 +11,9 @@ spec:
   mainClass: org.apache.spark.examples.SparkPi
   mainApplicationFile: local:///opt/spark/examples/jars/spark-examples.jar
   arguments:
-  - "5000"
+    - "100"
   sparkVersion: 3.5.3
+  timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
   driver:
     labels:
       version: 3.5.3
@@ -25,4 +26,3 @@ spec:
     instances: 1
     cores: 1
     memory: 512m
-    

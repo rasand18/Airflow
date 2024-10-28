@@ -1,6 +1,7 @@
 from datetime import timedelta, datetime
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
+from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesSensor
 from airflow.operators.python_operator import PythonOperator
 from airflow.hooks.base_hook import BaseHook
 import boto3
@@ -67,5 +68,14 @@ spark_k8s_task = SparkKubernetesOperator(
     dag=dag
 )
 
+sensor = SparkKubernetesSensor(
+    task_id='spark_pi_monitor',
+    namespace="spark-operator",
+    application_name="{{ task_instance.xcom_pull(task_ids='n-spark-on-k8s-airflow')['metadata']['name'] }}",
+    kubernetes_conn_id="spark-k8s",
+    dag=dag,
+    attach_log=True
+)
+
 # Definiera task-beroende
-spark_k8s_task
+spark_k8s_task >> sensor

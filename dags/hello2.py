@@ -74,7 +74,6 @@ sensor = SparkKubernetesSensor(
     application_name="{{ task_instance.xcom_pull(task_ids='n-spark-on-k8s-airflow')['metadata']['name'] }}",
     kubernetes_conn_id="spark-k8s",
     dag=dag,
-    api_group="sparkoperator.k8s.io",
     attach_log=True
 )
 

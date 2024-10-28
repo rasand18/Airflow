@@ -47,12 +47,12 @@ dag = DAG(
     template_searchpath='/opt/airflow/dags/repo/dags/'
 )
 
-# Task för att testa anslutningen till MinIO
-minio_connection_test_task = PythonOperator(
-    task_id='test_minio_connection',
-    python_callable=test_minio_connection,
-    dag=dag
-)
+# # Task för att testa anslutningen till MinIO
+# minio_connection_test_task = PythonOperator(
+#     task_id='test_minio_connection',
+#     python_callable=test_minio_connection,
+#     dag=dag
+# )
 
 # Spark task
 spark_k8s_task = SparkKubernetesOperator(
@@ -64,7 +64,7 @@ spark_k8s_task = SparkKubernetesOperator(
     namespace="spark-operator",
     kubernetes_conn_id="spark-k8s",
     do_xcom_push=True,
-    get_logs=True,
+    get_logs=False,
     dag=dag
 )
 

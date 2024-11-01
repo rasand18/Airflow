@@ -8,7 +8,7 @@ import boto3
 
 default_args = {
     'owner': 'datamasterylab.com',
-    'start_date': datetime(2024, 10, 25),
+    'start_date': datetime(2024, 10, 31),
     'catchup': False
 }
 
@@ -55,27 +55,36 @@ dag = DAG(
 #     dag=dag
 # )
 
-# Spark task
-spark_k8s_task = SparkKubernetesOperator(
-    task_id='n-spark-on-k8s-airflow',
-    trigger_rule="all_success",
-    depends_on_past=False,
-    retries=0,
-    application_file='spark-pi.yaml',
-    namespace="spark-operator",
-    kubernetes_conn_id="spark-k8s",
-    do_xcom_push=True,
-    dag=dag
-)
+# Skapa parallella Spark tasks och sensorer
+num_tasks = 3  # Antalet parallella instanser
+spark_tasks = []
+sensor_tasks = []
 
-sensor = SparkKubernetesSensor(
-    task_id='spark_pi_monitor',
-    namespace="spark-operator",
-    application_name="{{ task_instance.xcom_pull(task_ids='n-spark-on-k8s-airflow')['metadata']['name'] }}",
-    kubernetes_conn_id="spark-k8s",
-    dag=dag,
-    attach_log=True
-)
+for i in range(num_tasks):
+    spark_task = SparkKubernetesOperator(
+        task_id=f'n-spark-on-k8s-airflow-{i+1}',
+        trigger_rule="all_success",
+        depends_on_past=False,
+        retries=0,
+        application_file='spark-pi.yaml',
+        namespace="spark-operator",
+        kubernetes_conn_id="spark-k8s",
+        do_xcom_push=True,
+        dag=dag
+    )
 
-# Definiera task-beroende
-spark_k8s_task >> sensor
+    sensor_task = SparkKubernetesSensor(
+        task_id=f'spark_pi_monitor_{i+1}',
+        namespace="spark-operator",
+        application_name="{{ task_instance.xcom_pull(task_ids='n-spark-on-k8s-airflow-" + str(i + 1) + "')['metadata']['name'] }}",
+        kubernetes_conn_id="spark-k8s",
+        dag=dag,
+        attach_log=True
+    )
+
+    spark_task >> sensor_task  # Definiera beroendet mellan task och sensor
+    spark_tasks.append(spark_task)
+    sensor_tasks.append(sensor_task)
+
+# Kör alla Spark tasks parallellt
+spark_tasks

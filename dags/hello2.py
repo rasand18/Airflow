@@ -56,7 +56,7 @@ dag = DAG(
 # )
 
 # Skapa parallella Spark tasks och sensorer
-num_tasks = 3  # Antalet parallella instanser
+num_tasks = 10  # Antalet parallella instanser
 spark_tasks = []
 sensor_tasks = []
 

@@ -14,6 +14,11 @@ spec:
     - "1000"
   sparkVersion: 3.5.3
   timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
+  sparkConf:
+    "spark.kubernetes.executor.label.applicationId": spark-pi-{{ task_instance.task_id }}
+    "spark.kubernetes.driver.label.applicationId": spark-pi-{{ task_instance.task_id }}
+    "spark.kubernetes.executor.label.queue": "default.root.elias"
+    "spark.kubernetes.driver.label.queue": default.root.elias"
   driver:
     labels:
       version: 3.5.3

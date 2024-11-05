@@ -28,4 +28,4 @@ spec:
     memory: 512m
   batchScheduler: yunikorn
   batchSchedulerOptions:
-    queue: root.yunikorn-test-1
+    queue: root.low

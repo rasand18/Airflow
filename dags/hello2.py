@@ -3,6 +3,8 @@ from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
 from airflow.operators.python_operator import PythonOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.utils.task_group import TaskGroup
 from airflow.hooks.base_hook import BaseHook
 import boto3
 
@@ -82,7 +84,18 @@ for i in range(num_tasks):
         attach_log=True
     )
 
-    spark_task >> sensor_task  # Definiera beroendet mellan task och sensor
+    cancel_task = KubernetesPodOperator(
+            task_id=f"cancel_spark_job_{i+1}",
+            namespace="default",
+            name=f"cancel-spark-job-{i+1}",
+            image="bitnami/kubectl:latest",
+            cmds=["kubectl", "delete", "sparkapplication", f"spark-pi-n-spark-on-k8s-airflow-{i+1}"],
+            dag=dag,
+            trigger_rule="all_done"  # Körs endast om den manuellt triggas
+    )
+
+    spark_task >> sensor_task
+    sensor_task >> cancel_task  # Definiera beroendet mellan task och sensor
     spark_tasks.append(spark_task)
     sensor_tasks.append(sensor_task)
 

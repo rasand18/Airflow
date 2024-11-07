@@ -50,13 +50,6 @@ dag = DAG(
     template_searchpath='/opt/airflow/dags/repo/dags/'
 )
 
-# # Task för att testa anslutningen till MinIO
-# minio_connection_test_task = PythonOperator(
-#     task_id='test_minio_connection',
-#     python_callable=test_minio_connection,
-#     dag=dag
-# )
-
 # Skapa parallella Spark tasks och sensorer
 num_tasks = 10  # Antalet parallella instanser
 
@@ -65,6 +58,9 @@ with TaskGroup("spark_tasks_group", dag=dag) as spark_tasks_group:
     sensor_tasks = []
     
     for i in range(num_tasks):
+        # Skapa ett giltigt namn för SparkApplication
+        app_name = f"spark-pi-spark-tasks-group-n-spark-on-k8s-airflow-{i+1}".replace('_', '-').replace('.', '-')
+
         spark_task = SparkKubernetesOperator(
             task_id=f'n-spark-on-k8s-airflow-{i+1}',
             trigger_rule="all_success",
@@ -80,7 +76,7 @@ with TaskGroup("spark_tasks_group", dag=dag) as spark_tasks_group:
         sensor_task = SparkKubernetesSensor(
             task_id=f'spark_pi_monitor_{i+1}',
             namespace="spark-operator",
-            application_name="{{ task_instance.xcom_pull(task_ids='n-spark-on-k8s-airflow-" + str(i + 1) + "')['metadata']['name'] }}",
+            application_name=app_name,
             kubernetes_conn_id="spark-k8s",
             dag=dag,
             attach_log=True
@@ -91,7 +87,7 @@ with TaskGroup("spark_tasks_group", dag=dag) as spark_tasks_group:
             namespace="default",
             name=f"cancel-spark-job-{i+1}",
             image="bitnami/kubectl:latest",
-            cmds=["kubectl", "delete", "sparkapplication", "{{ task_instance.xcom_pull(task_ids='n-spark-on-k8s-airflow-" + str(i + 1) + "')['metadata']['name'] }}"],
+            cmds=["kubectl", "delete", "sparkapplication", app_name],
             dag=dag,
             trigger_rule="all_done"  # Körs endast om den manuellt triggas
         )

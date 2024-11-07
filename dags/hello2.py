@@ -14,35 +14,6 @@ default_args = {
     'catchup': False
 }
 
-# Funktion för att testa MinIO-anslutning
-def test_minio_connection():
-    # Hämta anslutningsdetaljer från Airflow
-    conn = BaseHook.get_connection("minio_conn")
-    
-    # Hämta credentials och endpoint från 'extra'
-    extra_config = conn.extra_dejson
-    access_key = extra_config.get("aws_access_key_id")
-    secret_key = extra_config.get("aws_secret_access_key")
-    endpoint_url = extra_config.get("endpoint_url")
-
-    print(access_key)
-    print(secret_key)
-    print(endpoint_url)
-    # Skapa S3-klient för MinIO
-    s3_client = boto3.client(
-        's3',
-        endpoint_url=endpoint_url,
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key
-    )
-
-    # Försök att lista buckets som ett anslutningstest
-    try:
-        response = s3_client.list_buckets()
-        print("Connection to MinIO successful. Buckets:", [bucket["Name"] for bucket in response.get("Buckets", [])])
-    except Exception as e:
-        print(f"Connection test failed: {e}")
-
 dag = DAG(
     'hej',
     default_args=default_args,
@@ -58,9 +29,6 @@ with TaskGroup("spark_tasks_group", dag=dag) as spark_tasks_group:
     sensor_tasks = []
     
     for i in range(num_tasks):
-        # Skapa ett giltigt namn för SparkApplication
-        app_name = f"spark-pi-spark-tasks-group-n-spark-on-k8s-airflow-{i+1}".replace('_', '-').replace('.', '-')
-
         spark_task = SparkKubernetesOperator(
             task_id=f'n-spark-on-k8s-airflow-{i+1}',
             trigger_rule="all_success",
@@ -70,13 +38,14 @@ with TaskGroup("spark_tasks_group", dag=dag) as spark_tasks_group:
             namespace="spark-operator",
             kubernetes_conn_id="spark-k8s",
             do_xcom_push=True,
+            params={"task_instance": f'n-spark-on-k8s-airflow-{i+1}'},  # Pass the task_id
             dag=dag
         )
 
         sensor_task = SparkKubernetesSensor(
             task_id=f'spark_pi_monitor_{i+1}',
             namespace="spark-operator",
-            application_name=app_name,
+            application_name=f"spark-pi-n-spark-on-k8s-airflow-{i+1}",
             kubernetes_conn_id="spark-k8s",
             dag=dag,
             attach_log=True
@@ -87,7 +56,7 @@ with TaskGroup("spark_tasks_group", dag=dag) as spark_tasks_group:
             namespace="default",
             name=f"cancel-spark-job-{i+1}",
             image="bitnami/kubectl:latest",
-            cmds=["kubectl", "delete", "sparkapplication", app_name],
+            cmds=["kubectl", "delete", "sparkapplication", f"spark-pi-n-spark-on-k8s-airflow-{i+1}"],
             dag=dag,
             trigger_rule="all_done"  # Körs endast om den manuellt triggas
         )

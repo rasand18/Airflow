@@ -24,15 +24,14 @@ with DAG(
         application_file='spark.yaml',  # Din Spark-applikationens specifikation
         namespace="spark-operator",
         kubernetes_conn_id="spark-k8s",
-        do_xcom_push=True,
-        name="spark-python-app-k8s"
+        do_xcom_push=True
     )
 
     # Sensor för att övervaka Spark-jobbet
     sensor_task = SparkKubernetesSensor(
         task_id='spark_pi_monitor',
         namespace="spark-operator",
-        application_name="{{ task_instance.xcom_pull(task_ids='spark_on_k8s')['metadata']['name'] }}",
+        application_name="spark-python-app-k8s",
         kubernetes_conn_id="spark-k8s",
         attach_log=True
     )

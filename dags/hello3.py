@@ -24,7 +24,8 @@ with DAG(
         application_file='spark.yaml',  # Din Spark-applikationens specifikation
         namespace="spark-operator",
         kubernetes_conn_id="spark-k8s",
-        do_xcom_push=True
+        do_xcom_push=True,
+        name="spark-python-app-k8s"
     )
 
     # Sensor för att övervaka Spark-jobbet

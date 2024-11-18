@@ -7,7 +7,7 @@ spec:
   type: Python
   mode: cluster
   image: harbor.ad.spendrups.se/dataplatform-test/spark-kafka-to-base:1.0
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Always
   mainApplicationFile: local:///app/sparkKafkaToBase.py  # Placera din Python-fil i /app
   sparkVersion: 3.5.3
   timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning

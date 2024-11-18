@@ -13,6 +13,19 @@ spec:
   timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
   sparkConf:
     "spark.yunikorn.queue": "root.high"
+    "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,io.delta:delta-spark_2.12:3.1.0,org.apache.spark:spark-avro_2.12:3.5.1,org.apache.hadoop:hadoop-aws:3.3.1,com.amazonaws:aws-java-sdk-bundle:1.12.375"
+    "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension"
+    "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
+    "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
+    "spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
+    "spark.hadoop.fs.s3a.access.key": "xIgeFyKHqCzuC79ITuSW"
+    "spark.hadoop.fs.s3a.secret.key": "vBaNq4k9ioYxdWKpiqzimm9qeN5sceSOu5IZjOeX"
+    "spark.hadoop.fs.s3a.endpoint": "https://dataplatform-minio-test.ad.spendrups.se"
+    "spark.hadoop.fs.s3a.path.style.access": "true"
+    "spark.hadoop.fs.s3a.connection.ssl.enabled": "true"
+    "spark.hadoop.fs.s3a.connection.ssl.verify": "false"
+    "spark.executor.extraJavaOptions": "-Dcom.amazonaws.sdk.disableCertChecking"
+    "spark.driver.extraJavaOptions": "-Dcom.amazonaws.sdk.disableCertChecking"
   driver:
     labels:
       version: 3.5.3

@@ -50,54 +50,55 @@ dag = DAG(
     template_searchpath='/opt/airflow/dags/repo/dags/'
 )
 
-# # Task för att testa anslutningen till MinIO
-# minio_connection_test_task = PythonOperator(
-#     task_id='test_minio_connection',
-#     python_callable=test_minio_connection,
-#     dag=dag
-# )
+# Task för att testa anslutningen till MinIO
+minio_connection_test_task = PythonOperator(
+    task_id='test_minio_connection',
+    python_callable=test_minio_connection,
+    dag=dag
+)
 
-# Skapa parallella Spark tasks och sensorer
-num_tasks = 10  # Antalet parallella instanser
-spark_tasks = []
-sensor_tasks = []
+minio_connection_test_task
+# # Skapa parallella Spark tasks och sensorer
+# num_tasks = 10  # Antalet parallella instanser
+# spark_tasks = []
+# sensor_tasks = []
 
-for i in range(num_tasks):
-    spark_task = SparkKubernetesOperator(
-        task_id=f'n-spark-on-k8s-airflow-{i+1}',
-        trigger_rule="all_success",
-        depends_on_past=False,
-        retries=0,
-        application_file='spark-pi.yaml',
-        namespace="spark-operator",
-        kubernetes_conn_id="spark-k8s",
-        do_xcom_push=True,
-        dag=dag
-    )
+# for i in range(num_tasks):
+#     spark_task = SparkKubernetesOperator(
+#         task_id=f'n-spark-on-k8s-airflow-{i+1}',
+#         trigger_rule="all_success",
+#         depends_on_past=False,
+#         retries=0,
+#         application_file='spark-pi.yaml',
+#         namespace="spark-operator",
+#         kubernetes_conn_id="spark-k8s",
+#         do_xcom_push=True,
+#         dag=dag
+#     )
 
-    sensor_task = SparkKubernetesSensor(
-        task_id=f'spark_pi_monitor_{i+1}',
-        namespace="spark-operator",
-        application_name="{{ task_instance.xcom_pull(task_ids='n-spark-on-k8s-airflow-" + str(i + 1) + "')['metadata']['name'] }}",
-        kubernetes_conn_id="spark-k8s",
-        dag=dag,
-        attach_log=True
-    )
+#     sensor_task = SparkKubernetesSensor(
+#         task_id=f'spark_pi_monitor_{i+1}',
+#         namespace="spark-operator",
+#         application_name="{{ task_instance.xcom_pull(task_ids='n-spark-on-k8s-airflow-" + str(i + 1) + "')['metadata']['name'] }}",
+#         kubernetes_conn_id="spark-k8s",
+#         dag=dag,
+#         attach_log=True
+#     )
 
-    cancel_task = KubernetesPodOperator(
-            task_id=f"cancel_spark_job_{i+1}",
-            namespace="default",
-            name=f"cancel-spark-job-{i+1}",
-            image="bitnami/kubectl:latest",
-            cmds=["kubectl", "delete", "sparkapplication", f"spark-pi-n-spark-on-k8s-airflow-{i+1}"],
-            dag=dag,
-            trigger_rule="all_done"  # Körs endast om den manuellt triggas
-    )
+#     cancel_task = KubernetesPodOperator(
+#             task_id=f"cancel_spark_job_{i+1}",
+#             namespace="default",
+#             name=f"cancel-spark-job-{i+1}",
+#             image="bitnami/kubectl:latest",
+#             cmds=["kubectl", "delete", "sparkapplication", f"spark-pi-n-spark-on-k8s-airflow-{i+1}"],
+#             dag=dag,
+#             trigger_rule="all_done"  # Körs endast om den manuellt triggas
+#     )
 
-    spark_task >> sensor_task
-    sensor_task >> cancel_task  # Definiera beroendet mellan task och sensor
-    spark_tasks.append(spark_task)
-    sensor_tasks.append(sensor_task)
+#     spark_task >> sensor_task
+#     sensor_task >> cancel_task  # Definiera beroendet mellan task och sensor
+#     spark_tasks.append(spark_task)
+#     sensor_tasks.append(sensor_task)
 
-# Kör alla Spark tasks parallellt
-spark_tasks
+# # Kör alla Spark tasks parallellt
+# spark_tasks

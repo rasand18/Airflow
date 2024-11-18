@@ -7,19 +7,15 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import Kubernete
 from airflow.utils.task_group import TaskGroup
 from airflow.hooks.base_hook import BaseHook
 import boto3
-import logging
 
 default_args = {
     'owner': 'datamasterylab.com',
-    'start_date': datetime(2024, 10, 31),
+    'start_date': datetime(2024, 11, 17),
     'catchup': False
 }
 
-
+# Funktion för att testa MinIO-anslutning
 def test_minio_connection():
-    # Skapa en logger
-    logger = logging.getLogger("airflow.task")
-    
     # Hämta anslutningsdetaljer från Airflow
     conn = BaseHook.get_connection("minio_conn")
     
@@ -29,25 +25,24 @@ def test_minio_connection():
     secret_key = extra_config.get("aws_secret_access_key")
     endpoint_url = extra_config.get("endpoint_url")
 
-    logger.info(f"Access Key: {access_key}")
-    logger.info(f"Secret Key: {secret_key}")
-    logger.info(f"Endpoint URL: {endpoint_url}")
-    
+    print(access_key)
+    print(secret_key)
+    print(endpoint_url)
     # Skapa S3-klient för MinIO
     s3_client = boto3.client(
         's3',
         endpoint_url=endpoint_url,
         aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key
+        aws_secret_access_key=secret_key,
+        verify=False
     )
 
     # Försök att lista buckets som ett anslutningstest
     try:
         response = s3_client.list_buckets()
-        buckets = [bucket["Name"] for bucket in response.get("Buckets", [])]
-        logger.info(f"Connection to MinIO successful. Buckets: {buckets}")
+        print("Connection to MinIO successful. Buckets:", [bucket["Name"] for bucket in response.get("Buckets", [])])
     except Exception as e:
-        logger.error(f"Connection test failed: {e}")
+        print(f"Connection test failed: {e}")
 
 dag = DAG(
     'hej',

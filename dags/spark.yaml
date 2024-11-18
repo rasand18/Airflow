@@ -12,17 +12,26 @@ spec:
   sparkVersion: 3.5.3
   timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
   sparkConf:
-    "spark.executor.memoryOverhead": "256m"
-    "spark.kubernetes.container.image.pullPolicy": "IfNotPresent"
+    "spark.yunikorn.queue": "root.high"
   driver:
     labels:
       version: 3.5.3
     cores: 1
-    memory: 512m
+    memory: 2G
     serviceAccount: spark-operator-spark
+    env:
+      - name: SPARK_YUNIKORN_QUEUE
+        value: "root.high"
   executor:
     labels:
       version: 3.5.3
-    instances: 2
+    instances: 1
     cores: 1
-    memory: 512m
+    memory: 2G
+    env:
+      - name: SPARK_YUNIKORN_QUEUE
+        value: "root.high"
+  batchScheduler: yunikorn
+  batchSchedulerOptions:
+    queue: root.high
+

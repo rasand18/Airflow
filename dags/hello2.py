@@ -34,7 +34,7 @@ def test_minio_connection():
         endpoint_url=endpoint_url,
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_key,
-        verify=False
+         verify='/etc/ssl/certs/minio/tls.crt'
     )
 
     # Försök att lista buckets som ett anslutningstest

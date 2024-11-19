@@ -37,10 +37,10 @@ spec:
       limits:
         ephemeral-storage: "2Gi"  # Maximal tillåten användning
     volumeMounts:
-      - name: spark-temp-storage
+      - name: tmp
         mountPath: /tmp
     volumes:
-      - name: spark-temp-storage
+      - name: tmp
         emptyDir:
           sizeLimit: "2Gi"
     serviceAccount: spark-operator-spark
@@ -59,10 +59,10 @@ spec:
       limits:
         ephemeral-storage: "2Gi"
     volumeMounts:
-      - name: spark-temp-storage
+      - name: tmp
         mountPath: /tmp
     volumes:
-      - name: spark-temp-storage
+      - name: tmp
         emptyDir:
           sizeLimit: "2Gi"
     env:

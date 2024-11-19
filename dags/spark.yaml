@@ -44,7 +44,7 @@ spec:
       version: 3.5.3
     instances: 1
     cores: 1
-    memory: 2G
+    memory: 1G
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"

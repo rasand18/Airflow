@@ -14,6 +14,7 @@ spec:
   sparkConf:
     "spark.yunikorn.queue": "root.high"
     "spark.local.dir": "s3a://base-checkpoint/"
+    "spark.logLevel": "DEBUG"
     "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,io.delta:delta-spark_2.12:3.1.0,org.apache.spark:spark-avro_2.12:3.5.1,org.apache.hadoop:hadoop-aws:3.3.1,com.amazonaws:aws-java-sdk-bundle:1.12.375"
     "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension"
     "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
@@ -31,8 +32,6 @@ spec:
     "spark.executor.extraJavaOptions": "-Dlog4j.rootCategory=DEBUG,console"
     "spark.driver.extraJavaOptions": "-Dlog4j.rootCategory=DEBUG,console"
   driver:
-    nodeSelector:
-    kubernetes.io/hostname: "cl-dataplatform-dev-worker-4h4wm-lzmkp-8p9p6"
     labels:
       version: 3.5.3
     cores: 1

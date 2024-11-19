@@ -11,9 +11,6 @@ spec:
   mainApplicationFile: local:///app/sparkKafkaToBase.py  # Placera din Python-fil i /app
   sparkVersion: 3.5.3
   timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
-  volumes:
-    - name: temp-volume
-      emptyDir: {}
   sparkConf:
     "spark.yunikorn.queue": "root.high"
     "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,io.delta:delta-spark_2.12:3.1.0,org.apache.spark:spark-avro_2.12:3.5.1,org.apache.hadoop:hadoop-aws:3.3.1,com.amazonaws:aws-java-sdk-bundle:1.12.375"
@@ -39,9 +36,6 @@ spec:
         ephemeral-storage: "1Gi"  # Minimum utrymme som krävs
       limits:
         ephemeral-storage: "2Gi"  # Maximal tillåten användning
-    volumeMounts:
-      - name: temp-volume
-        mountPath: /tmp
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
@@ -57,9 +51,6 @@ spec:
         ephemeral-storage: "1Gi"
       limits:
         ephemeral-storage: "2Gi"
-    volumeMounts:
-      - name: temp-volume
-        mountPath: /tmp
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"

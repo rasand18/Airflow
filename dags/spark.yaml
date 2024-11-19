@@ -11,6 +11,9 @@ spec:
   mainApplicationFile: local:///app/sparkKafkaToBase.py  # Placera din Python-fil i /app
   sparkVersion: 3.5.3
   timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
+  volumes:
+    - name: temp-volume
+      emptyDir: {}
   sparkConf:
     "spark.yunikorn.queue": "root.high"
     "spark.local.dir": "/tmp"
@@ -38,12 +41,8 @@ spec:
       limits:
         ephemeral-storage: "2Gi"  # Maximal tillåten användning
     volumeMounts:
-      - name: spark-tmp
+      - name: temp-volume
         mountPath: /tmp
-    volumes:
-      - name: spark-tmp
-        persistentVolumeClaim:
-          claimName: spark-pvc
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
@@ -60,12 +59,8 @@ spec:
       limits:
         ephemeral-storage: "2Gi"
     volumeMounts:
-      - name: spark-tmp
+      - name: temp-volume
         mountPath: /tmp
-    volumes:
-      - name: spark-tmp
-        persistentVolumeClaim:
-          claimName: spark-pvc
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"

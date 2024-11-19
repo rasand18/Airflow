@@ -31,6 +31,8 @@ spec:
     "spark.executor.extraJavaOptions": "-Dlog4j.rootCategory=DEBUG,console"
     "spark.driver.extraJavaOptions": "-Dlog4j.rootCategory=DEBUG,console"
   driver:
+    nodeSelector:
+    kubernetes.io/hostname: "cl-dataplatform-dev-worker-4h4wm-lzmkp-8p9p6"
     labels:
       version: 3.5.3
     cores: 1

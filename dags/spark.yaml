@@ -27,9 +27,6 @@ spec:
     "spark.hadoop.fs.s3a.connection.ssl.verify": "false"
     "spark.executor.extraJavaOptions": "-Dcom.amazonaws.sdk.disableCertChecking"
     "spark.driver.extraJavaOptions": "-Dcom.amazonaws.sdk.disableCertChecking"
-    "spark.driver.port": "7079"
-    "spark.blockManager.port": "7078"
-    "spark.driver.host": "spark-python-app-k8s-driver"
   driver:
     labels:
       version: 3.5.3

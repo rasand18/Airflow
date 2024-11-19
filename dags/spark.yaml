@@ -36,6 +36,13 @@ spec:
         ephemeral-storage: "1Gi"  # Minimum utrymme som krävs
       limits:
         ephemeral-storage: "2Gi"  # Maximal tillåten användning
+    volumeMounts:
+      - name: spark-temp-storage
+        mountPath: /tmp
+    volumes:
+      - name: spark-temp-storage
+        emptyDir:
+          sizeLimit: "2Gi"
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
@@ -51,6 +58,13 @@ spec:
         ephemeral-storage: "1Gi"
       limits:
         ephemeral-storage: "2Gi"
+    volumeMounts:
+      - name: spark-temp-storage
+        mountPath: /tmp
+    volumes:
+      - name: spark-temp-storage
+        emptyDir:
+          sizeLimit: "2Gi"
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"

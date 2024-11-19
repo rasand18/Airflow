@@ -31,19 +31,12 @@ spec:
     labels:
       version: 3.5.3
     cores: 1
-    memory: 4G
+    memory: 2G
     resources:
       requests:
         ephemeral-storage: "1Gi"  # Minimum utrymme som krävs
       limits:
         ephemeral-storage: "2Gi"  # Maximal tillåten användning
-    volumeMounts:
-      - name: tmp
-        mountPath: /tmp
-    volumes:
-      - name: tmp
-        emptyDir:
-          sizeLimit: "4Gi"
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
@@ -59,13 +52,6 @@ spec:
         ephemeral-storage: "1Gi"
       limits:
         ephemeral-storage: "2Gi"
-    volumeMounts:
-      - name: tmp
-        mountPath: /tmp
-    volumes:
-      - name: tmp
-        emptyDir:
-          sizeLimit: "2Gi"
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"

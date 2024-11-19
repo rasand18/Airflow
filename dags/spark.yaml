@@ -31,7 +31,7 @@ spec:
     labels:
       version: 3.5.3
     cores: 1
-    memory: 2G
+    memory: 4G
     resources:
       requests:
         ephemeral-storage: "1Gi"  # Minimum utrymme som krävs
@@ -43,7 +43,7 @@ spec:
     volumes:
       - name: tmp
         emptyDir:
-          sizeLimit: "2Gi"
+          sizeLimit: "4Gi"
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE

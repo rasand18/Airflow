@@ -1,0 +1,10 @@
+dbt_dataplatform_test:
+  outputs:
+    dev:
+      host: 172.16.130.13
+      method: thrift
+      port: 10000
+      schema: prod
+      threads: 3
+      type: spark
+  target: dev

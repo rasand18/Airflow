@@ -23,6 +23,8 @@ spec:
     "spark.hadoop.fs.s3a.access.key": "xIgeFyKHqCzuC79ITuSW"
     "spark.hadoop.fs.s3a.secret.key": "vBaNq4k9ioYxdWKpiqzimm9qeN5sceSOu5IZjOeX"
     "spark.hadoop.fs.s3a.endpoint": "https://dataplatform-minio-test.ad.spendrups.se"
+    "spark.hadoop.fs.s3a.ssl.truststore.location": "/etc/ssl/certs/app-full-cert.pem"
+    "spark.hadoop.fs.s3a.ssl.truststore.password": "changeit"
     "spark.hadoop.fs.s3a.path.style.access": "true"
     "spark.hadoop.fs.s3a.connection.ssl.enabled": "true"
     "spark.hadoop.fs.s3a.connection.ssl.verify": "false"
@@ -40,6 +42,13 @@ spec:
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
+    volumeMounts:
+      - name: minio-cert
+        mountPath: "/etc/ssl/certs"
+    volumes:
+      - name: minio-cert
+        secret:
+          secretName: minio-cert  # Replace with your Secret name
   executor:
     labels:
       version: 3.5.3
@@ -49,6 +58,13 @@ spec:
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
+    volumeMounts:
+      - name: minio-cert
+        mountPath: "/etc/ssl/certs"
+    volumes:
+      - name: minio-cert
+        secret:
+          secretName: minio-cert  # Replace with your Secret name
   batchScheduler: yunikorn
   batchSchedulerOptions:
     queue: root.high

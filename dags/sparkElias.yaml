@@ -20,17 +20,6 @@ spec:
     "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
     "spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
-    "spark.hadoop.fs.s3a.access.key": "xIgeFyKHqCzuC79ITuSW"
-    "spark.hadoop.fs.s3a.secret.key": "vBaNq4k9ioYxdWKpiqzimm9qeN5sceSOu5IZjOeX"
-    "spark.hadoop.fs.s3a.endpoint": "https://dataplatform-minio-test.ad.spendrups.se"
-    "spark.hadoop.fs.s3a.path.style.access": "true"
-    "spark.hadoop.fs.s3a.connection.ssl.enabled": "true"
-    "spark.hadoop.fs.s3a.connection.ssl.verify": "false"
-    "spark.executor.extraJavaOptions": "-Dcom.amazonaws.sdk.disableCertChecking"
-    "spark.driver.extraJavaOptions": "-Dcom.amazonaws.sdk.disableCertChecking"
-    "spark.ui.showConsoleProgress": "true"
-    "spark.executor.extraJavaOptions": "-Dlog4j.rootCategory=DEBUG,console"
-    "spark.driver.extraJavaOptions": "-Dlog4j.rootCategory=DEBUG,console"
   driver:
     labels:
       version: 3.5.3
@@ -40,6 +29,10 @@ spec:
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
+    volumeMounts:
+      - name: hive-config
+        mountPath: /opt/bitnami/spark/conf
+        readOnly: true
   executor:
     labels:
       version: 3.5.3
@@ -49,7 +42,17 @@ spec:
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
+    volumeMounts:
+      - name: hive-config
+        mountPath: /opt/bitnami/spark/conf
+        readOnly: true
   batchScheduler: yunikorn
   batchSchedulerOptions:
     queue: root.high
+  volumes:
+    - name: hive-config
+      secret: 
+        secretName: hive-config-secret
+  
+
 

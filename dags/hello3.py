@@ -21,7 +21,7 @@ with DAG(
     # Spark Kubernetes Operator för att köra Spark-jobbet
     spark_task = SparkKubernetesOperator(
         task_id='spark_on_k8s',
-        application_file='spark.yaml',  # Din Spark-applikationens specifikation
+        application_file='sparkElias.yaml',  # Din Spark-applikationens specifikation
         namespace="spark-operator",
         kubernetes_conn_id="spark-k8s",
         do_xcom_push=True

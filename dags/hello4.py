@@ -20,7 +20,7 @@ with DAG(
     python_k8s_task = KubernetesPodOperator(
         task_id='run_python_script_in_k8s',
         namespace='spark-operator',
-        image='harbor.ad.spendrups.se/dataplatform-test/spark-kafka-to-base:1.0',
+        image='harbor.ad.spendrups.se/dataplatform-test/spark-kafka-to-base:1.1',
         cmds=["python", "/app/sparkKafkaToBase.py"],  # Kör din Python-applikation
         name='simple-python-pod',
         is_delete_operator_pod=True,

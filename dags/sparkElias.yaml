@@ -30,9 +30,9 @@ spec:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
     securityContext:
-      runAsUser: 0        # Kör som root (UID 0)
-      runAsGroup: 0       # Använd root-gruppen (GID 0)
-      fsGroup: 0          # Grupp för filsystemtillgång
+      runAsUser: 1001        # Kör som root (UID 0)
+      runAsGroup: 1001       # Använd root-gruppen (GID 0)
+      fsGroup: 1001          # Grupp för filsystemtillgång
     volumeMounts:
       - name: hive-config
         mountPath: /opt/bitnami/spark/conf
@@ -47,9 +47,9 @@ spec:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
     securityContext:
-      runAsUser: 0        # Kör som root (UID 0)
-      runAsGroup: 0       # Använd root-gruppen (GID 0)
-      fsGroup: 0          # Grupp för filsystemtillgång
+      runAsUser: 1001        # Kör som root (UID 0)
+      runAsGroup: 1001       # Använd root-gruppen (GID 0)
+      fsGroup: 1001          # Grupp för filsystemtillgång
     volumeMounts:
       - name: hive-config
         mountPath: /opt/bitnami/spark/conf

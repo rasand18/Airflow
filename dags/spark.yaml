@@ -44,11 +44,12 @@ spec:
         value: "root.high"
     volumeMounts:
       - name: minio-cert
-        mountPath: "/etc/ssl/certs/minio"
+        mountPath: "/etc/ssl/certs/minio"  # Monteringsplatsen
+        readOnly: true  # Säkerställ att den är skrivskyddad
     volumes:
       - name: minio-cert
         secret:
-          secretName: minio-cert  # Replace with your Secret name
+          secretName: minio-cert
   executor:
     labels:
       version: 3.5.3
@@ -60,11 +61,12 @@ spec:
         value: "root.high"
     volumeMounts:
       - name: minio-cert
-        mountPath: "/etc/ssl/certs/minio"
+        mountPath: "/etc/ssl/certs/minio"  # Monteringsplatsen
+        readOnly: true  # Säkerställ att den är skrivskyddad
     volumes:
       - name: minio-cert
         secret:
-          secretName: minio-cert  # Replace with your Secret name
+          secretName: minio-cert
   batchScheduler: yunikorn
   batchSchedulerOptions:
     queue: root.high

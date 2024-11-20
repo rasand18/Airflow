@@ -23,7 +23,7 @@ spec:
     "spark.hadoop.fs.s3a.access.key": "xIgeFyKHqCzuC79ITuSW"
     "spark.hadoop.fs.s3a.secret.key": "vBaNq4k9ioYxdWKpiqzimm9qeN5sceSOu5IZjOeX"
     "spark.hadoop.fs.s3a.endpoint": "https://dataplatform-minio-test.ad.spendrups.se"
-    "spark.hadoop.fs.s3a.ssl.truststore.location": "/etc/ssl/certs/app-full-cert.pem"
+    "spark.hadoop.fs.s3a.ssl.truststore.location": "/etc/ssl/certs/minio/app-full-cert.pem"
     "spark.hadoop.fs.s3a.ssl.truststore.password": "changeit"
     "spark.hadoop.fs.s3a.path.style.access": "true"
     "spark.hadoop.fs.s3a.connection.ssl.enabled": "true"
@@ -44,7 +44,7 @@ spec:
         value: "root.high"
     volumeMounts:
       - name: minio-cert
-        mountPath: "/etc/ssl/certs"
+        mountPath: "/etc/ssl/certs/minio"
     volumes:
       - name: minio-cert
         secret:
@@ -60,7 +60,7 @@ spec:
         value: "root.high"
     volumeMounts:
       - name: minio-cert
-        mountPath: "/etc/ssl/certs"
+        mountPath: "/etc/ssl/certs/minio"
     volumes:
       - name: minio-cert
         secret:

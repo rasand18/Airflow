@@ -1,32 +1,17 @@
-from datetime import timedelta, datetime
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.operators.bash import BashOperator
+from datetime import datetime
 
 default_args = {
-    'owner': 'datamasterylab.com',
-    'start_date': datetime(2024, 10, 31),
-    'catchup': False
+    'owner': 'airflow',
+    'start_date': datetime(2023, 1, 1),
+    'retries': 1
 }
 
-# Skapa en enkel DAG
-with DAG(
-    'simple_python_k8s_dag',
-    default_args=default_args,
-    schedule=timedelta(days=1),
-    catchup=False
-) as dag:
+with DAG('dbt_test', default_args=default_args, schedule_interval=None) as dag:
 
-    # Kör Python-skript i en Kubernetes Pod
-    python_k8s_task = KubernetesPodOperator(
-        task_id='run_python_script_in_k8s',
-        namespace='spark-operator',
-        image='harbor.ad.spendrups.se/dataplatform-test/spark-kafka-to-base:1.1',
-        cmds=["python", "/app/sparkKafkaToBase.py"],  # Kör din Python-applikation
-        name='simple-python-pod',
-        is_delete_operator_pod=True,
-        in_cluster=True,
-        get_logs=True
+    dbt_debug = BashOperator(
+        task_id='dbt_debug',
+        bash_command='cd /opt/airflow/dags/repo/dags/dbt/dbt_dataplatform_test && dbt debug'
     )
-
-    # Kör Kubernetes-uppgiften
-    python_k8s_task
+    

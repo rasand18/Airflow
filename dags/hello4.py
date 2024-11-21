@@ -12,6 +12,5 @@ with DAG('dbt_test', default_args=default_args, schedule_interval=None) as dag:
 
     dbt_debug = BashOperator(
         task_id='dbt_debug',
-        bash_command='cd /opt/airflow/dags/repo/dags/dbt/dbt_dataplatform_test && dbt debug'
+        bash_command='dbt debug'
     )
-    

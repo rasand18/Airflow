@@ -12,7 +12,7 @@ with DAG('dbt_test', default_args=default_args, schedule_interval=None) as dag:
 
     dbt_debug = KubernetesPodOperator(
         task_id='dbt_debug',
-        namespace='airflow',  # Namespace där podden körs
+        namespace='spark-operator',  # Namespace där podden körs
         image='harbor.ad.spendrups.se/dataplatform-test/dbt:1.0',
         cmds=["sh", "-c"],
         arguments=["dbt debug"],

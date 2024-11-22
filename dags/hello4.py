@@ -15,7 +15,7 @@ with DAG('dbt_test', default_args=default_args, schedule_interval=None) as dag:
         namespace='spark-operator',  # Namespace där podden körs
         image='harbor.ad.spendrups.se/dataplatform-test/dbt:1.0',
         cmds=["sh", "-c"],
-        arguments=["dbt run"],
+        arguments=["dbt deps && dbt run"],  # Kör både dbt deps och dbt run
         name="dbt-debug-pod",
         get_logs=True  # Hämta loggar från podden
     )

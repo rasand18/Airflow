@@ -17,6 +17,5 @@ with DAG('dbt_test', default_args=default_args, schedule_interval=None) as dag:
         cmds=["sh", "-c"],
         arguments=["dbt run"],
         name="dbt-debug-pod",
-        is_delete_operator_pod=True,  # Ta bort podden efter körning
         get_logs=True  # Hämta loggar från podden
     )

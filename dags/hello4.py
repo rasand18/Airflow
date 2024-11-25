@@ -17,5 +17,6 @@ with DAG('dbt_test', default_args=default_args, schedule_interval=None) as dag:
         cmds=["sh", "-c"],
         arguments=["dbt deps && dbt run"],  # Kör både dbt deps och dbt run
         name="dbt-debug-pod",
-        get_logs=True  # Hämta loggar från podden
+        get_logs=True,  # Hämta loggar från podden
+        image_pull_policy='Always'  # Sätt pulling policy till Always
     )

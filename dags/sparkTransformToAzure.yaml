@@ -10,8 +10,8 @@ spec:
   imagePullPolicy: Always
   mainApplicationFile: local:///app/sparkTransformToAzure.py  # Placera din Python-fil i /app
   arguments:
-      - "--input_tables"
-      - "CSYTAB_clean_system_settings"
+    - "--input_tables"
+    - "CSYTAB_clean_system_settings"
   sparkVersion: 3.5.3
   timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
   sparkConf:

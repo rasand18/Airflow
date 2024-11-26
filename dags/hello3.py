@@ -27,7 +27,7 @@ with DAG(
         spark_task = SparkKubernetesOperator(
             task_id=f"spark_task_{table_name}",
             namespace="spark-operator",
-            application_file="spark_application_template.yaml",  # Din Spark YAML-template
+            application_file="sparkTransformToAzure.yaml",  # Din Spark YAML-template
             kubernetes_conn_id="spark-k8s",
             do_xcom_push=False,
             params={"table_name": table_name},  # Skicka dynamiskt tabellnamn till YAML

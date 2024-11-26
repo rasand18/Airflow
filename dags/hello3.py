@@ -2,6 +2,7 @@ from datetime import timedelta, datetime
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
+import os
 
 # Lista över tabeller
 TABLES = ["CSYTAB_clean_system_settings"]
@@ -28,8 +29,8 @@ with DAG(
             namespace="spark-operator",
             application_file="spark_application_template.yaml",  # Din Spark YAML-template
             kubernetes_conn_id="spark-k8s",
-            do_xcom_push=True,
-            env_vars={"SPARK_INPUT_TABLE": table_name},  # Dynamiskt tabellnamn
+            do_xcom_push=False,
+            params={"table_name": table_name},  # Skicka dynamiskt tabellnamn till YAML
         )
 
         # Sensor för att övervaka Spark-jobbet

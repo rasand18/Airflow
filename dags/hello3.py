@@ -13,7 +13,7 @@ default_args = {
     'catchup': False
 }
 
-# Funktion för att konvertera tabellnamn till giltiga Kubernetes-namn
+# Funktion för att konvertera tabellnamn till Kubernetes-kompatibla namn
 def normalize_k8s_name(name):
     return re.sub(r"[^a-z0-9-]+", "-", name.lower()).strip("-")
 
@@ -36,7 +36,7 @@ with DAG(
             application_file="sparkTransformToAzure.yaml",  # Din Spark YAML-template
             kubernetes_conn_id="spark-k8s",
             do_xcom_push=False,
-            params={"table_name": table_name},  # Skicka dynamiskt tabellnamn till YAML
+            params={"table_name": table_name},  # Dynamiskt tabellnamn för YAML
         )
 
         # Sensor för att övervaka Spark-jobbet

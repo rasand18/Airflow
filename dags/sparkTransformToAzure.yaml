@@ -1,7 +1,7 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: spark-python-app-{{ params.table_name }}
+  name: spark-python-app-{{ params.table_name | lower | replace("_", "-") }}
   namespace: spark-operator
 spec:
   type: Python
@@ -15,7 +15,7 @@ spec:
   sparkVersion: 3.5.3
   timeToLiveSeconds: 3600
   sparkConf:
-    "spark.yunikorn.queue": "root.high"
+    "spark.yunikorn.queue": "root.high"  # Statisk för nu, men kan göras dynamisk senare
     "spark.logLevel": "DEBUG"
     "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,io.delta:delta-spark_2.12:3.1.0,org.apache.spark:spark-avro_2.12:3.5.1,org.apache.hadoop:hadoop-aws:3.3.1,com.amazonaws:aws-java-sdk-bundle:1.12.375,org.apache.hadoop:hadoop-azure:3.2.0"
     "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension"

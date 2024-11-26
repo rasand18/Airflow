@@ -10,7 +10,7 @@ spec:
   imagePullPolicy: Always
   mainApplicationFile: local:///app/sparkTransformToAzure.py
   arguments:
-    - "--input_tables"
+    - "--input_table"
     - "{{ table_name }}"
   sparkVersion: 3.5.3
   timeToLiveSeconds: 3600

@@ -13,7 +13,7 @@ TABLES = [
         "driver_memory": "1G",
         "executor_instances": 2,
         "executor_cores": 1,
-        "executor_memory": "2G",
+        "executor_memory": "1G",
     }
 ]
 

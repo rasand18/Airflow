@@ -26,25 +26,25 @@ spec:
   driver:
     labels:
       version: 3.5.3
-    cores: "{{ driver_cores }}"
-    memory: "{{ driver_memory }}"
+    cores: "{{ params.driver_cores }}"
+    memory: "{{ params.driver_memory }}"
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
-        value: "root.{{ queue_name }}"
+        value: "root.{{ params.queue_name }}"
       - name: SPARK_CONF_DIR
         value: "/opt/bitnami/spark/conf"
   executor:
     labels:
       version: 3.5.3
-    instances: "{{ executor_instances }}"
-    cores: "{{ executor_cores }}"
-    memory: "{{ executor_memory }}"
+    instances: "{{ params.executor_instances }}"
+    cores: "{{ params.executor_cores }}"
+    memory: "{{ params.executor_memory }}"
     env:
       - name: SPARK_YUNIKORN_QUEUE
-        value: "root.{{ queue_name }}"
+        value: "root.{{ params.queue_name }}"
       - name: SPARK_CONF_DIR
         value: "/opt/bitnami/spark/conf"
   batchScheduler: yunikorn
   batchSchedulerOptions:
-    queue: root.high
+    queue: "root.{{ params.queue_name }}"

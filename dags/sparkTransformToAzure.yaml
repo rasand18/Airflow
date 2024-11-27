@@ -26,25 +26,26 @@ spec:
   driver:
     labels:
       version: 3.5.3
-    cores: {{ params.driver_cores | default(1) | int }}
-    memory: "{{ params.driver_memory | default('1G') }}"
+    cores: {{ params.driver_cores | default(1, true) | int }}
+    memory: "{{ params.driver_memory | default('1G', true) }}"
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
-        value: "root.{{ params.queue_name | default('low') }}"
+        value: "root.{{ params.queue_name | default('low', true) }}"
       - name: SPARK_CONF_DIR
         value: "/opt/bitnami/spark/conf"
   executor:
     labels:
       version: 3.5.3
-    instances: {{ params.executor_instances | default(1) | int }}
-    cores: {{ params.executor_cores | default(1) | int }}
-    memory: "{{ params.executor_memory | default('1G') }}"
+    instances: {{ params.executor_instances | default(1, true) | int }}
+    cores: {{ params.executor_cores | default(1, true) | int }}
+    memory: "{{ params.executor_memory | default('1G', true) }}"
     env:
       - name: SPARK_YUNIKORN_QUEUE
-        value: "root.{{ params.queue_name | default('low') }}"
+        value: "root.{{ params.queue_name | default('low', true) }}"
       - name: SPARK_CONF_DIR
         value: "/opt/bitnami/spark/conf"
   batchScheduler: yunikorn
   batchSchedulerOptions:
-    queue: "root.{{ params.queue_name | default('low') }}"
+    queue: "root.{{ params.queue_name | default('low', true) }}"
+

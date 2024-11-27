@@ -6,7 +6,7 @@ import re
 
 # Lista över tabeller med parametrar för varje
 TABLES = [
-    {"table_name": "CSYTAB_clean_system_settings","queue_name": "high","driver_cores": 1,"driver_memory": "1G","executor_instances": 2,"executor_cores": 1,"executor_memory": "1G"}
+    {"table_name": "CSYTAB_clean_system_settings"}
     # {"table_name": "INVENTORY_product_data", "queue_name": "medium", "driver_cores": 2, "driver_memory": "2G", "executor_instances": 3, "executor_cores": 2, "executor_memory": "2G"},
 ]
 

@@ -26,7 +26,7 @@ spec:
   driver:
     labels:
       version: 3.5.3
-    cores: "{{ params.driver_cores }}"
+    cores: {{ params.driver_cores }}
     memory: "{{ params.driver_memory }}"
     serviceAccount: spark-operator-spark
     env:
@@ -38,7 +38,7 @@ spec:
     labels:
       version: 3.5.3
     instances: "{{ params.executor_instances }}"
-    cores: "{{ params.executor_cores }}"
+    cores: {{ params.executor_cores }}
     memory: "{{ params.executor_memory }}"
     env:
       - name: SPARK_YUNIKORN_QUEUE

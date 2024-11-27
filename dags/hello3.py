@@ -6,15 +6,8 @@ import re
 
 # Lista över tabeller med parametrar för varje
 TABLES = [
-    {
-        "table_name": "CSYTAB_clean_system_settings",
-        "queue_name": "high",
-        "driver_cores": 1,
-        "driver_memory": "1G",
-        "executor_instances": 2,
-        "executor_cores": 1,
-        "executor_memory": "1G",
-    }
+    {"table_name": "CSYTAB_clean_system_settings","queue_name": "high","driver_cores": 1,"driver_memory": "1G","executor_instances": 2,"executor_cores": 1,"executor_memory": "1G"}
+    # {"table_name": "INVENTORY_product_data", "queue_name": "medium", "driver_cores": 2, "driver_memory": "2G", "executor_instances": 3, "executor_cores": 2, "executor_memory": "2G"},
 ]
 
 default_args = {
@@ -46,14 +39,14 @@ with DAG(
             application_file="sparkTransformToAzure.yaml",  # Din Spark YAML-template
             kubernetes_conn_id="spark-k8s",
             do_xcom_push=False,
-            params={
-                "table_name": config["table_name"],
-                "queue_name": config["queue_name"],
-                "driver_cores": config["driver_cores"],
-                "driver_memory": config["driver_memory"],
-                "executor_instances": config["executor_instances"],
-                "executor_cores": config["executor_cores"],
-                "executor_memory": config["executor_memory"],
+            params={  # Skicka bara det som behövs
+                "table_name": config.get("table_name"),
+                "queue_name": config.get("queue_name"),
+                "driver_cores": config.get("driver_cores"),
+                "driver_memory": config.get("driver_memory"),
+                "executor_instances": config.get("executor_instances"),
+                "executor_cores": config.get("executor_cores"),
+                "executor_memory": config.get("executor_memory"),
             },
         )
 

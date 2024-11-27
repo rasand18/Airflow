@@ -1,21 +1,22 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: spark-python-app-{{ params.table_name | lower | replace("_", "-") }}
+  name: spark-python-app-k8s
   namespace: spark-operator
 spec:
   type: Python
   mode: cluster
   image: harbor.ad.spendrups.se/dataplatform-test/spark-transform-to-azure:1.0
   imagePullPolicy: Always
-  mainApplicationFile: local:///app/sparkTransformToAzure.py
+  mainApplicationFile: local:///app/sparkTransformToAzure.py  # Placera din Python-fil i /app
   arguments:
-    - "--input_table"
+    - "--input_tables"
     - "{{ params.table_name }}"
   sparkVersion: 3.5.3
-  timeToLiveSeconds: 3600
+  timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
   sparkConf:
-    "spark.yunikorn.queue": "root.high"  # Statisk för nu, men kan göras dynamisk senare
+    "spark.yunikorn.queue": "root.high"
+    "spark.local.dir": "s3a://base-checkpoint/"
     "spark.logLevel": "DEBUG"
     "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,io.delta:delta-spark_2.12:3.1.0,org.apache.spark:spark-avro_2.12:3.5.1,org.apache.hadoop:hadoop-aws:3.3.1,com.amazonaws:aws-java-sdk-bundle:1.12.375,org.apache.hadoop:hadoop-azure:3.2.0"
     "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension"
@@ -26,20 +27,24 @@ spec:
     labels:
       version: 3.5.3
     cores: 1
-    memory: "2G"
+    memory: 1G
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
+      - name: SPARK_CONF_DIR
+        value: "/opt/bitnami/spark/conf"
   executor:
     labels:
       version: 3.5.3
     instances: 1
     cores: 1
-    memory: "2G"
+    memory: 1G
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
+      - name: SPARK_CONF_DIR
+        value: "/opt/bitnami/spark/conf"
   batchScheduler: yunikorn
   batchSchedulerOptions:
     queue: root.high

@@ -29,6 +29,8 @@ spec:
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
+      - name: SPARK_CONF_DIR
+        value: "/opt/bitnami/spark/conf"
   executor:
     labels:
       version: 3.5.3
@@ -38,6 +40,8 @@ spec:
     env:
       - name: SPARK_YUNIKORN_QUEUE
         value: "root.high"
+      - name: SPARK_CONF_DIR
+        value: "/opt/bitnami/spark/conf"
   batchScheduler: yunikorn
   batchSchedulerOptions:
     queue: root.high

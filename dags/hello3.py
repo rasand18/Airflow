@@ -4,8 +4,18 @@ from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKu
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
 import re
 
-# Lista över tabeller
-TABLES = ["CSYTAB_clean_system_settings"]
+# Lista över tabeller med parametrar för varje
+TABLES = [
+    {
+        "table_name": "CSYTAB_clean_system_settings",
+        "queue_name": "high",
+        "driver_cores": 1,
+        "driver_memory": "1G",
+        "executor_instances": 2,
+        "executor_cores": 1,
+        "executor_memory": "2G",
+    }
+]
 
 default_args = {
     'owner': 'datamasterylab.com',
@@ -26,8 +36,8 @@ with DAG(
     catchup=False
 ) as dag:
 
-    for table_name in TABLES:
-        normalized_table_name = normalize_k8s_name(table_name)
+    for config in TABLES:
+        normalized_table_name = normalize_k8s_name(config["table_name"])
 
         # Spark Kubernetes Operator-task
         spark_task = SparkKubernetesOperator(
@@ -36,14 +46,22 @@ with DAG(
             application_file="sparkTransformToAzure.yaml",  # Din Spark YAML-template
             kubernetes_conn_id="spark-k8s",
             do_xcom_push=False,
-            params={"table_name": table_name},  # Dynamiskt tabellnamn för YAML
+            params={
+                "table_name": config["table_name"],
+                "queue_name": config["queue_name"],
+                "driver_cores": config["driver_cores"],
+                "driver_memory": config["driver_memory"],
+                "executor_instances": config["executor_instances"],
+                "executor_cores": config["executor_cores"],
+                "executor_memory": config["executor_memory"],
+            },
         )
 
         # Sensor för att övervaka Spark-jobbet
         sensor_task = SparkKubernetesSensor(
             task_id=f"monitor_{normalized_table_name}",
             namespace="spark-operator",
-            application_name=f"spark-python-app-{normalized_table_name}",  # Matchar application_name i din YAML
+            application_name=f"spark-spark-app-{normalized_table_name}",  # Matchar application_name i din YAML
             kubernetes_conn_id="spark-k8s",
             attach_log=True
         )

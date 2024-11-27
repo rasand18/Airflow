@@ -1,19 +1,19 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: spark-python-app-{{ params.table_name | lower | replace("_", "-") }}
+  name: spark-spark-app-{{ params.table_name | lower | replace("_", "-") }}
   namespace: spark-operator
 spec:
   type: Python
   mode: cluster
   image: harbor.ad.spendrups.se/dataplatform-test/spark-transform-to-azure:1.0
   imagePullPolicy: Always
-  mainApplicationFile: local:///app/sparkTransformToAzure.py  # Placera din Python-fil i /app
+  mainApplicationFile: local:///app/sparkTransformToAzure.py
   arguments:
     - "--input_tables"
     - "{{ params.table_name }}"
   sparkVersion: 3.5.3
-  timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
+  timeToLiveSeconds: 600
   sparkConf:
     "spark.yunikorn.queue": "root.high"
     "spark.local.dir": "s3a://base-checkpoint/"
@@ -26,23 +26,23 @@ spec:
   driver:
     labels:
       version: 3.5.3
-    cores: 1
-    memory: 1G
+    cores: "{{ driver_cores }}"
+    memory: "{{ driver_memory }}"
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
-        value: "root.high"
+        value: "root.{{ queue_name }}"
       - name: SPARK_CONF_DIR
         value: "/opt/bitnami/spark/conf"
   executor:
     labels:
       version: 3.5.3
-    instances: 1
-    cores: 1
-    memory: 1G
+    instances: "{{ executor_instances }}"
+    cores: "{{ executor_cores }}"
+    memory: "{{ executor_memory }}"
     env:
       - name: SPARK_YUNIKORN_QUEUE
-        value: "root.high"
+        value: "root.{{ queue_name }}"
       - name: SPARK_CONF_DIR
         value: "/opt/bitnami/spark/conf"
   batchScheduler: yunikorn

@@ -1,20 +1,21 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: spark-python-app-k8s
+  name: spark-app-{{ params.table_name | lower | replace("_", "-") }}
   namespace: spark-operator
 spec:
   type: Python
   mode: cluster
-  image: harbor.ad.spendrups.se/dataplatform-test/spark-kafka-to-base:1.1
+  image: harbor.ad.spendrups.se/dataplatform-test/spark-kafka-to-base:1.0
   imagePullPolicy: Always
-  mainApplicationFile: local:///app/sparkKafkaToBase.py  # Placera din Python-fil i /app
+  mainApplicationFile: local:///app/sparkKafkaToBase.py
+  arguments:
+    - "--input_tables"
+    - "{{ params.table_name }}"
   sparkVersion: 3.5.3
-  timeToLiveSeconds: 3600  # Podden lever i 1 timme efter avslutning
+  timeToLiveSeconds: 600
   sparkConf:
-    "spark.yunikorn.queue": "root.high"
-    "spark.local.dir": "s3a://base-checkpoint/"
-    "spark.logLevel": "DEBUG"
+    "spark.yunikorn.queue": "root.{{ params.queue_name | default('low') }}"
     "spark.jars.packages": "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,io.delta:delta-spark_2.12:3.1.0,org.apache.spark:spark-avro_2.12:3.5.1,org.apache.hadoop:hadoop-aws:3.3.1,com.amazonaws:aws-java-sdk-bundle:1.12.375"
     "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension"
     "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
@@ -23,27 +24,26 @@ spec:
   driver:
     labels:
       version: 3.5.3
-    cores: 1
-    memory: 2G
+    cores: {{ params.driver_cores | default(1, true) | int }}
+    memory: "{{ params.driver_memory | default('1G', true) }}"
     serviceAccount: spark-operator-spark
     env:
       - name: SPARK_YUNIKORN_QUEUE
-        value: "root.high"
+        value: "root.{{ params.queue_name | default('low', true) }}"
       - name: SPARK_CONF_DIR
         value: "/opt/bitnami/spark/conf"
   executor:
     labels:
       version: 3.5.3
-    instances: 1
-    cores: 1
-    memory: 1G
+    instances: {{ params.executor_instances | default(1, true) | int }}
+    cores: {{ params.executor_cores | default(1, true) | int }}
+    memory: "{{ params.executor_memory | default('1G', true) }}"
     env:
       - name: SPARK_YUNIKORN_QUEUE
-        value: "root.high"
+        value: "root.{{ params.queue_name | default('low', true) }}"
       - name: SPARK_CONF_DIR
         value: "/opt/bitnami/spark/conf"
   batchScheduler: yunikorn
   batchSchedulerOptions:
-    queue: root.high
-
+    queue: "root.{{ params.queue_name | default('low', true) }}"
 

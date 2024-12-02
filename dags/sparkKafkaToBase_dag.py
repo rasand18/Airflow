@@ -31,7 +31,7 @@ def normalize_k8s_name(name):
 
 # Skapa DAG
 with DAG(
-    dag_id="dynamic_spark_table_dag",
+    dag_id="kafka-to-base",
     default_args=default_args,
     schedule=timedelta(days=1),
     template_searchpath='/opt/airflow/dags/repo/dags/',

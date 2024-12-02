@@ -39,13 +39,11 @@ with DAG(
 
     for config in TABLES:
         normalized_table_name = normalize_k8s_name(config["table_name"])
-        print(normalized_table_name)
-        print(config.get("table_name"))
         # Spark Kubernetes Operator-task
         spark_task = SparkKubernetesOperator(
             task_id=f"spark-task-{normalized_table_name}",
             namespace="spark-operator",
-            application_file="sparkTransformToAzure.yaml",  # Din Spark YAML-template
+            application_file="sparkKafkaToBase.yaml",  # Din Spark YAML-template
             kubernetes_conn_id="spark-k8s",
             do_xcom_push=False,
             params={  # Skicka bara det som behövs

@@ -12,7 +12,7 @@ TABLES = [
     {"table_name": "/m3/MVXCJDB.MITMAS","queue_name": "high"},
     {"table_name": "/m3/MVXCJDB.MITHRY","queue_name": "high"},
     {"table_name": "/m3/MVXCJDB.MITPOP","queue_name": "high"},
-    {"table_name": "/m3/MVXCJDB.MITISH","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.MITSCH","queue_name": "high"},
     {"table_name": "/m3/MVXCJDB.OLICHA","queue_name": "high"},
     {"table_name": "/m3/MVXCJDB.ODHEAD","queue_name": "high"}
 ]

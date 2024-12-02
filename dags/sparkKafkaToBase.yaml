@@ -1,7 +1,7 @@
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
 metadata:
-  name: spark-app-{{ params.table_name }}
+  name: spark-app-{{ params.spark_app_name }}
   namespace: spark-operator
 spec:
   type: Python

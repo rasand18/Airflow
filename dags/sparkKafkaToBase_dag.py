@@ -15,7 +15,7 @@ TABLES = [
     {"table_name": "/m3/MVXCJDB.MITPOP"},
     {"table_name": "/m3/MVXCJDB.MITISH"},
     {"table_name": "/m3/MVXCJDB.OLICHA"},
-    {"table_name": "/m3/MVXCJDB.MITLAD"}
+    {"table_name": "/m3/MVXCJDB.MITISH"}
     # {"table_name": "/m3/MVXCJDB.CSYTAB", "queue_name": "medium", "driver_cores": 2, "driver_memory": "2G", "executor_instances": 3, "executor_cores": 2, "executor_memory": "2G"},
 ]
 
@@ -49,7 +49,8 @@ with DAG(
             kubernetes_conn_id="spark-k8s",
             do_xcom_push=False,
             params={  # Skicka bara det som behövs
-                "table_name": normalized_table_name,
+                "spark_app_name": normalized_table_name,
+                "table_name": config.get("table_name"),
                 "queue_name": config.get("queue_name"),
                 "driver_cores": config.get("driver_cores"),
                 "driver_memory": config.get("driver_memory"),
@@ -63,7 +64,7 @@ with DAG(
         sensor_task = SparkKubernetesSensor(
             task_id=f"monitor_{normalized_table_name}",
             namespace="spark-operator",
-            application_name=f"spark-spark-app-{normalized_table_name}",  # Matchar application_name i din YAML
+            application_name=f"spark-app-{normalized_table_name}",  # Matchar application_name i din YAML
             kubernetes_conn_id="spark-k8s",
             attach_log=True
         )

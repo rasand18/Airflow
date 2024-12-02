@@ -49,7 +49,7 @@ with DAG(
             kubernetes_conn_id="spark-k8s",
             do_xcom_push=False,
             params={  # Skicka bara det som behövs
-                "table_name": config.get("table_name"),
+                "table_name": normalized_table_name,
                 "queue_name": config.get("queue_name"),
                 "driver_cores": config.get("driver_cores"),
                 "driver_memory": config.get("driver_memory"),

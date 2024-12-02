@@ -6,8 +6,17 @@ import re
 
 # Lista över tabeller med parametrar för varje
 TABLES = [
-    {"table_name": "/m3/MVXCJDB.CSYTAB"}
-    # {"table_name": "INVENTORY_product_data", "queue_name": "medium", "driver_cores": 2, "driver_memory": "2G", "executor_instances": 3, "executor_cores": 2, "executor_memory": "2G"},
+    {"table_name": "/m3/MVXCJDB.CSYTAB"},
+    {"table_name": "/m3/MVXCJDB.OOLINE"},
+    {"table_name": "/m3/MVXCJDB.OOHEAD"},
+    {"table_name": "/m3/MVXCJDB.ODHEAD"},
+    {"table_name": "/m3/MVXCJDB.MITMAS"},
+    {"table_name": "/m3/MVXCJDB.MITHRY"},
+    {"table_name": "/m3/MVXCJDB.MITPOP"},
+    {"table_name": "/m3/MVXCJDB.MITISH"},
+    {"table_name": "/m3/MVXCJDB.OLICHA"},
+    {"table_name": "/m3/MVXCJDB.MITLAD"}
+    # {"table_name": "/m3/MVXCJDB.CSYTAB", "queue_name": "medium", "driver_cores": 2, "driver_memory": "2G", "executor_instances": 3, "executor_cores": 2, "executor_memory": "2G"},
 ]
 
 default_args = {

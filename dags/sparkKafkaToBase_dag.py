@@ -14,8 +14,7 @@ TABLES = [
     {"table_name": "/m3/MVXCJDB.MITHRY"},
     {"table_name": "/m3/MVXCJDB.MITPOP"},
     {"table_name": "/m3/MVXCJDB.MITISH"},
-    {"table_name": "/m3/MVXCJDB.OLICHA"},
-    {"table_name": "/m3/MVXCJDB.MITISH"}
+    {"table_name": "/m3/MVXCJDB.OLICHA"}
     # {"table_name": "/m3/MVXCJDB.CSYTAB", "queue_name": "medium", "driver_cores": 2, "driver_memory": "2G", "executor_instances": 3, "executor_cores": 2, "executor_memory": "2G"},
 ]
 

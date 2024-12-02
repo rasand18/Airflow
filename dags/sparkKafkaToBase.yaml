@@ -22,9 +22,9 @@ spec:
     "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem"
     "spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider"
     "spark.sql.files.maxPartitionBytes": "134217728"
-    "spark.hadoop.fs.s3a.multipart.size: 52428800"  # 50 MB per multipart
-    "spark.hadoop.fs.s3a.multipart.threshold: 52428800"  # Vid 50 MB börjar multipart användas
-    "spark.hadoop.fs.s3a.block.size: 67108864"  # 64 MB blockstorlek
+    "spark.hadoop.fs.s3a.multipart.size: 52428800"
+    "spark.hadoop.fs.s3a.multipart.threshold: 52428800"
+    "spark.hadoop.fs.s3a.block.size: 67108864"
 
   driver:
     labels:

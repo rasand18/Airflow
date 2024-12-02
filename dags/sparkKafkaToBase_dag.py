@@ -15,7 +15,7 @@ TABLES = [
     # {"table_name": "/m3/MVXCJDB.MITPOP"},
     # {"table_name": "/m3/MVXCJDB.MITISH"},
     # {"table_name": "/m3/MVXCJDB.OLICHA"}
-    {"table_name": "/m3/MVXCJDB.ODHEAD", "queue_name": "high", "driver_cores": 1, "driver_memory": "1G", "executor_instances": 2, "executor_cores": 1, "executor_memory": "2G"}
+    {"table_name": "/m3/MVXCJDB.CSYTAB", "queue_name": "high", "driver_cores": 1, "driver_memory": "1G", "executor_instances": 2, "executor_cores": 1, "executor_memory": "2G"}
 ]
 
 default_args = {

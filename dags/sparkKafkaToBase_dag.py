@@ -6,16 +6,15 @@ import re
 
 # Lista över tabeller med parametrar för varje
 TABLES = [
-    # {"table_name": "/m3/MVXCJDB.CSYTAB"},
-    # {"table_name": "/m3/MVXCJDB.OOLINE"},
-    # {"table_name": "/m3/MVXCJDB.OOHEAD"},
-    # {"table_name": "/m3/MVXCJDB.ODHEAD"}
-    # {"table_name": "/m3/MVXCJDB.MITMAS"},
-    # {"table_name": "/m3/MVXCJDB.MITHRY"},
-    # {"table_name": "/m3/MVXCJDB.MITPOP"},
-    # {"table_name": "/m3/MVXCJDB.MITISH"},
-    # {"table_name": "/m3/MVXCJDB.OLICHA"}
-    {"table_name": "/m3/MVXCJDB.ODHEAD", "queue_name": "high", "driver_cores": 1, "driver_memory": "1G", "executor_instances": 2, "executor_cores": 1, "executor_memory": "2G"}
+    {"table_name": "/m3/MVXCJDB.CSYTAB","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.OOLINE","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.OOHEAD","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.MITMAS","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.MITHRY","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.MITPOP","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.MITISH","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.OLICHA","queue_name": "high"},
+    {"table_name": "/m3/MVXCJDB.ODHEAD","queue_name": "high"}
 ]
 
 default_args = {

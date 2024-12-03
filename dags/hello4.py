@@ -12,15 +12,17 @@ default_args = {
 
 # Funktion för att dynamiskt lista DBT-modeller
 def get_dbt_models():
-    # Kör dbt ls för att lista alla modeller (fungerar lokalt eller med rätt context i containern)
+    # Ange rätt plats för profiles.yml
+    profiles_dir = "/dataplatform_spendrups_test"
     result = subprocess.run(
-        ["dbt", "ls", "--resource-type", "model"],
+        ["dbt", "ls", "--resource-type", "model", "--profiles-dir", profiles_dir],
         capture_output=True,
         text=True
     )
     if result.returncode != 0:
         raise RuntimeError(f"Error fetching DBT models: {result.stderr}")
     return result.stdout.strip().split("\n")
+
 
 with DAG('dbt_test_dynamic', default_args=default_args, schedule_interval=None) as dag:
 

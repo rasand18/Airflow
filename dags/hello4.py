@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
+from cosmos.providers.dbt.core.operators.kubernetes import DbtKubernetesPodOperator
 from datetime import datetime
 
 default_args = {
